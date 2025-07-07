@@ -5,7 +5,7 @@
     :class="{ 'slide-down': hasStartedSliding }"
   >
     <div class="content">
-      <PulsingLogo />
+      
       <Spinner />
     </div>
   </div>
