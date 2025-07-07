@@ -1,6 +1,7 @@
 import { readMultipartFormData } from 'h3'
 import prisma from '~/server/database/client'
-import { sendEmail } from '~/server/utils/sendEmail'
+import { sendEmail } from '~/utils/sendEmail'
+
 
 export default defineEventHandler(async (event) => {
   try {
