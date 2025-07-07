@@ -1,0 +1,85 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
+  binaryTargets   = ["native", "debian-openssl-1.1.x"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+//datasource db {
+//  provider  = "postgresql"
+//  url       = env("POSTGRES_PRISMA_URL")
+//  directUrl = env("POSTGRES_URL_NON_POOLING")
+//}
+
+model User {
+  id                   Int                  @id @default(autoincrement())
+  loginType            String?              @default("email")
+  password             String?
+  email                String?              @unique
+  firstName            String?
+  lastName             String?
+  username             String?              @unique
+  phone                String?              @unique
+  
+  coverImage           String? // Field for storing cover image URL
+  avatar               String? // Field for storing avatar URL
+  session              Session[]
+  stripeCustomerId     String?
+  Subscription         Subscription[]
+  posts                Post[]
+
+  photos               Photo[] // Define the relationship with the Photo model
+
+}
+
+model Session {
+  id        Int       @id @default(autoincrement())
+  authToken String    @unique
+  user      User      @relation(fields: [userId], references: [id])
+  userId    Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+}
+
+model Post {
+  id             Int      @id @default(autoincrement())
+  userId         Int
+  user           User     @relation(fields: [userId], references: [id])
+  type           String // Type of post: 'text', 'video', 'meme', etc.
+  content        Json // Store content data (e.g., video details for video posts)
+  createdAt      DateTime @default(now())
+
+  photos    Photo[] // Relation to Photo model
+}
+
+model Photo {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  postId    Int? // Optional: Link to Post
+  url       String?  @db.Text
+  createdAt DateTime @default(now())
+
+  user User  @relation(fields: [userId], references: [id])
+  post Post? @relation(fields: [postId], references: [id]) // Optional relation to a post
+}
+
+
+model Subscription {
+  id            Int       @id @default(autoincrement())
+  user          User      @relation(fields: [userId], references: [id])
+  userId        Int
+  stripeId      String    @unique
+  stripeStatus  String?
+  stripePriceId String?
+  quantity      Int?
+  trialEndsAt   DateTime?
+  endsAt        DateTime?
+  startDate     DateTime
+  lastEventDate DateTime
+}
+
