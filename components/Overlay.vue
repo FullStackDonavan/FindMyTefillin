@@ -13,7 +13,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import PulsingLogo from "~/components/PulsingLogo.vue";
+//import PulsingLogo from "~/components/PulsingLogo.vue";
 import Spinner from "~/components/Spinner.vue";
 
 const isVisible = ref(true);
