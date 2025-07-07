@@ -61,7 +61,7 @@
 
       <!-- Success -->
       <p v-if="success" class="text-green-600 dark:text-green-400 mt-4 font-medium text-center">
-        ✅ Report submitted!
+        ✅ Report submitted! 
       </p>
     </form>
   </div>
