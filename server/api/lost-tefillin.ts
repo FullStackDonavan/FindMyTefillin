@@ -1,67 +1,69 @@
-import { readMultipartFormData } from 'h3'
+import { getHeader, readBody, createError } from 'h3'
 import prisma from '~/server/database/client'
-import { sendEmail } from '~/utils/sendEmail'
-
+import { getUserByAuthToken } from '~/server/database/repositories/sessionRepository'
 
 export default defineEventHandler(async (event) => {
   try {
-    const formData = await readMultipartFormData(event)
-    const fields: Record<string, string> = {}
-    let photoFile: any = null
+    const authToken = getHeader(event, 'authorization')?.replace('Bearer ', '')
+    if (!authToken) throw createError({ statusCode: 401, message: 'Unauthorized' })
 
-    for (const part of formData || []) {
-      if (part.type === 'file') {
-        photoFile = part
-      } else {
-        fields[part.name] = part.data
+    const user = await getUserByAuthToken(authToken)
+    if (!user) throw createError({ statusCode: 403, message: 'Invalid authentication token.' })
+
+    const body = await readBody(event)
+
+    const requiredFields = [
+      'idTag', 'registered', 'qrAttached', 'firstName', 'lastName',
+      'phone', 'email', 'location'
+    ]
+    for (const field of requiredFields) {
+      if (body[field] === undefined || body[field] === null) {
+        throw createError({ statusCode: 400, message: `Missing field: ${field}` })
       }
     }
 
-    // Upload photo if provided (assuming you have a /uploads folder or S3)
+    const registered = (typeof body.registered === 'string')
+      ? body.registered.toLowerCase() === 'true'
+      : Boolean(body.registered)
+
+    const qrAttached = (typeof body.qrAttached === 'string')
+      ? body.qrAttached.toLowerCase() === 'true'
+      : Boolean(body.qrAttached)
+
     let photoUrl = null
-    if (photoFile) {
-      const fileName = `tefillin_${Date.now()}_${photoFile.filename}`
-      const filePath = `./public/uploads/${fileName}`
-      await Bun.write(filePath, photoFile.data)
-      photoUrl = `/uploads/${fileName}`
+    if (body.photoId) {
+      // Lookup photo record by photoId in DB
+      const photoRecord = await prisma.photo.findUnique({
+        where: { id: body.photoId }
+      })
+
+      if (photoRecord) {
+        photoUrl = photoRecord.url // or whatever field stores the photo URL
+      }
     }
 
-    // Save to database
     const lostReport = await prisma.lostTefillinReport.create({
       data: {
-        idTag: fields.idTag,
-        registered: fields.registered === 'true',
-        qrAttached: fields.qrAttached === 'true',
-        firstName: fields.firstName,
-        lastName: fields.lastName,
-        phone: fields.phone,
-        alternatePhone: fields.alternatePhone,
-        email: fields.email,
-        location: fields.location,
+        userId: user.id,
+        idTag: body.idTag,
+        registered,
+        qrAttached,
+        firstName: body.firstName,
+        lastName: body.lastName,
+        phone: body.phone,
+        alternatePhone: body.alternatePhone || null,
+        email: body.email,
+        location: body.location,
         photoUrl,
       },
     })
 
-    // Send confirmation email (admin + user)
-    const message = `
-      <p><strong>${fields.firstName} ${fields.lastName}</strong> has reported lost tefillin.</p>
-      <p><strong>ID Tag:</strong> ${fields.idTag}</p>
-      <p><strong>Location:</strong> ${fields.location}</p>
-      <p><strong>Phone:</strong> ${fields.phone}</p>
-      <p><strong>Alternate Phone:</strong> ${fields.alternatePhone}</p>
-      <p><strong>Email:</strong> ${fields.email}</p>
-      ${photoUrl ? `<p><img src="${photoUrl}" alt="Tefillin Bag" width="300"/></p>` : ''}
-    `
-
-    await sendEmail({
-      to: [fields.email, 'admin@findmytefilin.com'],
-      subject: 'Lost Tefillin Report Submitted',
-      html: message,
-    })
-
-    return { success: true }
+    return { success: true, report: lostReport }
   } catch (error) {
     console.error('❌ Error submitting lost tefillin report:', error)
-    return { success: false, message: 'Failed to process report.' }
+    return {
+      success: false,
+      message: error.message || 'Server Error',
+    }
   }
 })

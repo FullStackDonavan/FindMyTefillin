@@ -304,6 +304,13 @@
               <div class="border-b border-gray-300 dark:border-gray-600 mb-4">
                 <ul class="flex space-x-4 bg-white dark:bg-gray-800 p-4 shadow-md">
                   <li
+                    :class="tab === 'lost' ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-500 hover:text-blue-500'"
+                    class="cursor-pointer pb-2"
+                    @click="setTab('lost')"
+                  >
+                    Lost
+                  </li>
+                  <li
                     :class="tab === 'found' ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-500 hover:text-blue-500'"
                     class="cursor-pointer pb-2"
                     @click="setTab('found')"
@@ -315,6 +322,11 @@
 
               <!-- Tab Content -->
               <div>
+                <!-- Lost Tab -->
+                <div v-if="tab === 'lost'" class="">
+                  <LostTefillinForm />
+                  <LostFeed />
+                </div>
                 <!-- Found Tab -->
                 <div v-if="tab === 'found'" class="">
                   <FoundTefillinForm />

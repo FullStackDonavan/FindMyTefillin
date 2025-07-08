@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-2xl mx-auto bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md">
+  <div class="mx-auto bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md">
     <h2 class="text-2xl font-bold mb-4 text-center text-gray-800 dark:text-white">🧳 I Lost My Tefillin</h2>
 
     <!-- Are they registered? -->
@@ -87,6 +87,7 @@ const file = ref(null)
 const location = ref('')
 
 const loading = ref(false)
+const authToken = useCookie('auth_token')
 
 const yesButtonClass = (active) =>
   `px-4 py-1 rounded-full border font-medium ${
@@ -101,25 +102,49 @@ const handleSubmit = async () => {
   loading.value = true
 
   try {
-    const formData = new FormData()
-    formData.append('idTag', idTag.value)
-    formData.append('registered', registered.value)
-    formData.append('qrAttached', qrAttached.value)
-    formData.append('firstName', firstName.value)
-    formData.append('lastName', lastName.value)
-    formData.append('phone', phone.value)
-    formData.append('alternatePhone', alternatePhone.value)
-    formData.append('email', email.value)
-    formData.append('location', location.value)
-    if (file.value) formData.append('image', file.value)
+    let photoId = null
 
-    // You can POST to your API endpoint here
-    await fetch('/api/lost-tefillin', {
+    // 1. Upload photo first (if any)
+    if (file.value) {
+      const formData = new FormData()
+      formData.append('image', file.value)
+
+      const uploadRes = await fetch('/api/photos/upload', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${authToken.value}`,
+        },
+        body: formData,
+      })
+
+      const uploadData = await uploadRes.json()
+      if (!uploadData?.photo?.id) throw new Error('Photo upload failed')
+      photoId = uploadData.photo.id
+    }
+
+    // 2. Submit Lost Tefillin Report (now with photoId)
+    const res = await fetch('/api/lost-tefillin', {
       method: 'POST',
-      body: formData,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authToken.value}`,
+      },
+      body: JSON.stringify({
+        idTag: idTag.value,
+        registered: registered.value,
+        qrAttached: qrAttached.value,
+        firstName: firstName.value,
+        lastName: lastName.value,
+        phone: phone.value,
+        alternatePhone: alternatePhone.value,
+        email: email.value,
+        location: location.value,
+        photoId, // <-- Send this instead of raw photo
+      }),
     })
 
-    router.push('/thank-you-lost') // Redirect to thank you page
+    if (!res.ok) throw new Error(await res.text())
+    router.push('/thank-you-lost')
   } catch (err) {
     alert('Submission failed.')
     console.error(err)
@@ -127,6 +152,8 @@ const handleSubmit = async () => {
     loading.value = false
   }
 }
+
+
 </script>
 
 <style scoped>

@@ -33,6 +33,7 @@ model User {
   posts                Post[]
 
   photos               Photo[] // Define the relationship with the Photo model
+  lostTefillinReports  LostTefillinReport[]
 
 }
 
@@ -56,6 +57,25 @@ model Post {
 
   photos    Photo[] // Relation to Photo model
 }
+
+model LostTefillinReport {
+  id             Int      @id @default(autoincrement())
+  userId         Int
+  user           User     @relation(fields: [userId], references: [id])
+  idTag          String
+  registered     Boolean
+  qrAttached     Boolean
+  firstName      String
+  lastName       String
+  phone          String
+  alternatePhone String?
+  email          String
+  location       String
+  photoUrl       String?
+  createdAt      DateTime @default(now())
+}
+
+
 
 model Photo {
   id        Int      @id @default(autoincrement())
