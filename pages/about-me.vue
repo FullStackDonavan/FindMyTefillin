@@ -7,8 +7,7 @@
       <ParagraphDescription>
         Play my game to get to get to know me better!
       </ParagraphDescription>
-      <Game
-    /></BasicSection>
+      </BasicSection>
     <!-- Other sections -->
   </PatternSection>
 </template>

@@ -1,33 +1,6 @@
 <template>
   <PatternSection>
     <div>
-        <!-- Cover Image -->
-        <div
-          class="h-[500px] w-full bg-cover bg-center relative pb-20"
-          :style="{ backgroundImage: `url('${loggedInUser?.coverImage || defaultCoverImage}')` }"
-        >
-          <!-- Camera Icon for Cover Image -->
-          <label
-          for="cover-upload"
-          class="absolute bottom-4 right-4 bg-gray-500 text-white p-3 rounded-full cursor-pointer hover:bg-gray-600 shadow-md"
-          title="Upload Cover Image"
-        >
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" />
-        <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
-      </svg>
-
-        </label>
-        <input
-          id="cover-upload"
-          type="file"
-          name="cover"
-          accept="image/*"
-          class="hidden"
-          @change="handleFileChange('cover', $event)"
-        />
-        </div>
-
         <!-- Full-Width Box -->
         <div class="bg-white dark:bg-gray-800 border-b border-gray-300">
           <div class="max-w-6xl mx-auto bg-white dark:bg-gray-800 p-6 relative z-10">
@@ -71,31 +44,6 @@
                   {{ loggedInUser?.firstName }} {{ loggedInUser?.lastName }}
                 </h1>
                 <p class="text-gray-600 dark:text-gray-400">{{ loggedInUser?.role || 'User' }}</p>
-                <!-- Friends -->
-                <div class="mt-4 p-4">
-                  <div v-if="loadingFriends" class="text-gray-600 dark:text-gray-400">Loading friends...</div>
-                  <div v-else-if="friends.length === 0" class="text-gray-600 dark:text-gray-400">No friends found.</div>
-                  <div v-else class="flex flex-wrap items-center">
-                    <div
-                      v-for="friend in friends"
-                      :key="friend.id"
-                      class="relative -ml-4 first:ml-0"
-                    >
-                      <router-link
-                        :key="friend.id"
-                        :to="`/profile/${friend.id}`"
-                        class="block w-16 h-16 rounded-full border border-gray-400 dark:border-gray-600 overflow-hidden hover:scale-105 transition transform duration-200"
-                      >
-                        <img :src="friend.avatar" alt="Friend Avatar" class="w-full h-full object-cover" />
-                      </router-link>
-                    </div>
-                  </div>
-                </div>
-
-
-                
-
-
               </div>
             </div>
           </div>
@@ -226,58 +174,7 @@
                 </div>
               </div>
 
-              <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg mt-4 p-4">
-                <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">Friends</h2>
-                <div>
-                  <div v-if="loadingFriends" class="text-gray-600 dark:text-gray-400">Loading friends...</div>
-                  <div v-else-if="friends.length === 0" class="text-gray-600 dark:text-gray-400">No friends found.</div>
-                  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1">
-                    <div
-                      v-for="friend in friends"
-                      :key="friend.id"
-                      class="flex flex-col items-center space-y-2"
-                    >
-                      <router-link
-                        :key="friend.id"
-                        :to="`/profile/${friend.id}`"
-                        class="flex flex-col items-center p-2"
-                      >
-                        <!-- Friend Avatar with Rounded Corners -->
-                        <img :src="friend.avatar" alt="Friend Avatar" class="w-24 h-24 border-2 border-gray-300 dark:border-gray-600 object-cover rounded-md" />
-                      </router-link>
-                      <!-- Friend Name -->
-                      <p class="text-sm text-gray-800 dark:text-gray-200 font-medium leading-none">
-                        {{ friend.firstName }} {{ friend.lastName }}
-                      </p>
-                    </div>
-                  </div>
-                </div>
 
-
-              </div>
-
-              <!-- Photos -->
-              <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg mt-4 p-4">
-                <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">Photos</h2>
-                <div>
-                <div v-if="loadingPhotos" class="text-gray-600 dark:text-gray-400">Loading photos...</div>
-                <div v-else-if="photos.length === 0" class="text-gray-600 dark:text-gray-400">No photos found.</div>
-                <div v-else class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                  <div
-                    v-for="photo in photos"
-                    :key="photo.id"
-                    class="flex flex-col items-center space-y-2"
-                  >
-                    <img
-                      :src="photo.url"
-                      alt="Uploaded Photo"
-                      class="w-24 h-24 border-2 border-gray-300 dark:border-gray-600 object-cover rounded-md"
-                    />
-                  </div>
-
-                </div>
-              </div>
-            </div>
           
 
 
@@ -378,20 +275,7 @@ const loggedInUser = ref(null)
 const defaultCoverImage = 'https://placehold.co/2000x500'
 const editing = ref(false)
 const tab = ref('my')
-const highlights = ref([])
-const loadingHighlights = ref(false)
-const errorHighlights = ref(null)
-const friends = ref([])
-const loadingFriends = ref(false)
-const errorFriends = ref(null)
-const notes = ref([])
-const loadingNotes = ref(false)
-const photos = ref([])
-const loadingPhotos = ref(false)
-const errorPhotos = ref(null)
-const places = ref([])
-const loadingPlaces = ref(false)
-const errorPlaces = ref(null)
+
 
 // Get the reactive auth cookie
 const authCookie = useAuthCookie()
@@ -434,86 +318,6 @@ async function getLoggedInUser() {
 }
 
 
-
-async function fetchPhotos() {
-  try {
-    loadingPhotos.value = true
-    // Directly use the auth cookie's value for API calls
-    if (!authCookie.value) throw new Error('Authentication token is missing.')
-    const response = await $fetch('/api/user/photos', {
-      headers: { Authorization: `Bearer ${authCookie.value}` },
-    })
-    photos.value = response.photos || []
-  } catch (error) {
-    console.error('Error fetching photos:', error)
-    errorPhotos.value = 'Failed to load photos. Please try again.'
-  } finally {
-    loadingPhotos.value = false
-  }
-}
-
-async function fetchFriends() {
-  try {
-    loadingFriends.value = true
-    if (!authCookie.value) throw new Error('Authentication token is missing.')
-    const response = await $fetch('/api/friends/friends', {
-      headers: { Authorization: `Bearer ${authCookie.value}` },
-    })
-    friends.value = response.friends || []
-    console.log('friends', friends.value)
-  } catch (error) {
-    console.error('Error fetching friends:', error)
-    errorFriends.value = 'Failed to load friends. Please try again.'
-  } finally {
-    loadingFriends.value = false
-  }
-}
-
-async function fetchHighlights() {
-  try {
-    loadingHighlights.value = true
-    if (!authCookie.value) throw new Error('Authentication token is missing.')
-    const response = await $fetch('/api/user/highlights', {
-      headers: { Authorization: `Bearer ${authCookie.value}` },
-    })
-    highlights.value = response.highlights || []
-  } catch (error) {
-    console.error('Error fetching highlights:', error)
-  } finally {
-    loadingHighlights.value = false
-  }
-}
-
-async function fetchNotes() {
-  try {
-    loadingNotes.value = true
-    if (!authCookie.value) throw new Error('Authentication token is missing.')
-    const response = await $fetch('/api/user/getNotes', {
-      headers: { Authorization: `Bearer ${authCookie.value}` },
-    })
-    notes.value = response.notes || []
-  } catch (error) {
-    console.error('Error fetching notes:', error)
-  } finally {
-    loadingNotes.value = false
-  }
-}
-
-async function fetchPlaces() {
-  try {
-    loadingPlaces.value = true
-    if (!authCookie.value) throw new Error('Authentication token is missing.')
-    const response = await $fetch('/api/user/getPlaces', {
-      headers: { Authorization: `Bearer ${authCookie.value}` },
-    })
-    places.value = response.places || []
-  } catch (error) {
-    console.error('Error fetching places:', error)
-    errorPlaces.value = 'Failed to load places. Please try again.'
-  } finally {
-    loadingPlaces.value = false
-  }
-}
 
 async function updateLoggedInUser() {
   try {
@@ -603,8 +407,6 @@ onMounted(async () => {
   loggedInUser.value = await getLoggedInUser();
 
 
-  await fetchPhotos();
-  await fetchFriends();
 });
 
 

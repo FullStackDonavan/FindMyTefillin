@@ -84,25 +84,7 @@ export default defineNuxtConfig({
     define: {
       'global.window': 'window', // To resolve window reference issues in SSR
     },
-    ssr: {
-      noExternal: ['@aws-sdk/client-ivs'], // Avoid bundling IVS SDK in SSR
-    },
-    optimizeDeps: {
-      exclude: ['video.js'], // Exclude video.js
-      include: ['@babylonjs/core', '@babylonjs/gui', '@babylonjs/loaders']
-
-    },
   },
-  build: {
-    transpile: ['@aws-sdk/client-ivs'],  // Explicitly transpile AWS SDK IVS client
-  },
-  plugins: [
-    '~/plugins/kaboom.js', // Example plugin
-  ],
-  serverHandlers: [
-    {
-      route: '/api/socket.io',  // The WebSocket URL path
-      handler: '~/server/middleware/socketio.js',  // Path to your WebSocket handler
-    },
-  ],
+  plugins: [],
+  serverHandlers: [],
 });

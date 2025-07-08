@@ -25,7 +25,6 @@ model User {
   username             String?              @unique
   phone                String?              @unique
   
-  coverImage           String? // Field for storing cover image URL
   avatar               String? // Field for storing avatar URL
   session              Session[]
   stripeCustomerId     String?
@@ -35,7 +34,7 @@ model User {
   photos               Photo[] // Define the relationship with the Photo model
   lostTefillinReports  LostTefillinReport[]
   registeredTefillin   RegisteredTefillin[]
-
+  foundPosts           FoundPost[]
 }
 
 model RegisteredTefillin {
@@ -50,9 +49,23 @@ model RegisteredTefillin {
   status      String   @default("active")
   createdAt   DateTime @default(now())
 
-  lostReports LostTefillinReport[] @relation("TefillinReports") // 👈 Add this line
+  lostReports LostTefillinReport[] @relation("TefillinReports") 
+  foundPosts  FoundPost[]
 }
 
+model FoundPost {
+  id                         Int      @id @default(autoincrement())
+  userId                     Int
+  user                       User     @relation(fields: [userId], references: [id])
+  idTag                      String
+  location                   String
+  photoUrl                   String?
+  matchedRegisteredTefillinId Int?    // optional relation to RegisteredTefillin
+
+  matchedRegisteredTefillin  RegisteredTefillin? @relation(fields: [matchedRegisteredTefillinId], references: [id])
+  status         String    @default("unclaimed")
+  createdAt                  DateTime @default(now())
+}
 
 
 model Session {
