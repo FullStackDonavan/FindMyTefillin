@@ -186,6 +186,7 @@ const handleSubmit = async () => {
           idCode: idCode.value,
           location: location.value,
           photoId,
+          status: 'foundButLost',
         },
       }),
     })
@@ -193,16 +194,41 @@ const handleSubmit = async () => {
     const response = await postRes.json()
     if (!postRes.ok || !response.success) throw new Error(response.message || 'Post creation failed')
 
-    // 3. Notify user based on update result
+    // 3. Notify user
     success.value = true
-
     if (response.updated) {
       alert('✅ This Tefillin was already registered. The status has been updated to "found".')
     } else {
       alert('✅ Found report submitted.')
     }
 
-    // 4. Reset form
+    // ✅ 4. Register the Tefillin if not already in the database
+    if (!idMatched.value) {
+      const regRes = await fetch('/api/tefillin/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authToken.value}`,
+        },
+        body: JSON.stringify({
+          idTag: idCode.value,
+          qrAttached: false,
+          description: `Auto-registered by found report on ${new Date().toLocaleDateString()}`,
+          photoUrl: uploadData.photo.url,
+          status: 'foundButLost', // ✅ Add this here
+        }),
+      })
+
+      const regData = await regRes.json()
+      if (!regRes.ok || !regData.success) {
+        console.warn('⚠️ Registration after found failed:', regData.message)
+      } else {
+        console.log('✅ Auto-registered tefillin:', regData.tefillin.id)
+      }
+    }
+
+
+    // 5. Reset form
     idCode.value = ''
     location.value = ''
     file.value = null
@@ -213,6 +239,7 @@ const handleSubmit = async () => {
     loading.value = false
   }
 }
+
 
 const handleIdCheck = async () => {
   idError.value = idCode.value.length !== 7 || !/^\d{7}$/.test(idCode.value)

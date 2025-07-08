@@ -20,75 +20,52 @@ export default defineEventHandler(async (event) => {
     const photo = await prisma.photo.findUnique({ where: { id: content.photoId } })
     if (!photo) throw createError({ statusCode: 404, message: 'Photo not found' })
 
-    // Find the registered tefillin by idTag
+    const idTag = content.idCode
+
     const existingTefillin = await prisma.registeredTefillin.findUnique({
-      where: { idTag: content.idCode },
+      where: { idTag },
     })
 
     if (existingTefillin) {
-      // Check if there is any lost post for this Tefillin
-      const lostPost = await prisma.lostPost.findFirst({
-        where: { idTag: content.idCode },
+      const lostPost = await prisma.lostPost.findFirst({ where: { idTag } })
+
+      const newStatus = lostPost ? 'foundButLost' : 'found'
+
+      await prisma.registeredTefillin.update({
+        where: { idTag },
+        data: {
+          status: newStatus,
+          photoUrl: photo.url,
+          userId: lostPost ? existingTefillin.userId : user.id,
+        },
       })
 
-      if (lostPost) {
-        // If lost post exists, update status to found and create found post
-        await prisma.registeredTefillin.update({
-          where: { idTag: content.idCode },
-          data: {
-            status: 'found',
-            photoUrl: photo.url,
-            userId: existingTefillin.userId, // keep the original owner or consider updating if needed
-          },
-        })
+      await prisma.foundPost.create({
+        data: {
+          userId: user.id,
+          idTag,
+          location: content.location,
+          photoUrl: photo.url,
+          matchedRegisteredTefillinId: existingTefillin.id,
+          status: newStatus,
+        },
+      })
 
-        await prisma.foundPost.create({
-          data: {
-            userId: user.id,
-            idTag: content.idCode,
-            location: content.location,
-            photoUrl: photo.url,
-            matchedRegisteredTefillinId: existingTefillin.id,
-          },
-        })
-
-        return { success: true, updated: true, status: 'found' }
-      } else {
-        // No lost post exists — register found post and update ownership to current user
-        await prisma.registeredTefillin.update({
-          where: { idTag: content.idCode },
-          data: {
-            status: 'found',
-            photoUrl: photo.url,
-            userId: user.id, // assign ownership to current user who found it
-          },
-        })
-
-        await prisma.foundPost.create({
-          data: {
-            userId: user.id,
-            idTag: content.idCode,
-            location: content.location,
-            photoUrl: photo.url,
-            matchedRegisteredTefillinId: existingTefillin.id,
-          },
-        })
-
-        return { success: true, updated: false, status: 'found' }
-      }
+      return { success: true, updated: true, status: newStatus }
     }
 
-    // If no registered tefillin found, create found post only
+    // Not registered yet — just log the found post
     await prisma.foundPost.create({
       data: {
         userId: user.id,
-        idTag: content.idCode,
+        idTag,
         location: content.location,
         photoUrl: photo.url,
+        status: 'unclaimed',
       },
     })
 
-    return { success: true, updated: false, status: 'unregistered' }
+    return { success: true, updated: false, status: 'unclaimed' }
   } catch (error) {
     console.error('❌ Error in /api/found-post:', error)
     throw createError({ statusCode: 500, message: error.message || 'Internal Server Error' })

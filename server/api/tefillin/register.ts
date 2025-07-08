@@ -1,4 +1,4 @@
-import { getHeader, readBody } from 'h3'
+import { getHeader, readBody, createError } from 'h3'
 import prisma from '~/server/database/client'
 import { getUserByAuthToken } from '~/server/database/repositories/sessionRepository'
 
@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
     if (!user) throw createError({ statusCode: 403, message: 'Invalid token.' })
 
     const body = await readBody(event)
-    const { idTag, qrAttached, description, photoUrl } = body
+    const { idTag, qrAttached, description, photoUrl, status } = body
 
     if (!idTag || typeof qrAttached !== 'boolean') {
       throw createError({ statusCode: 400, message: 'Missing required fields.' })
@@ -24,6 +24,7 @@ export default defineEventHandler(async (event) => {
         qrAttached,
         description: description || null,
         photoUrl: photoUrl || null,
+        status: status || 'active', // ✅ use provided status, else default to 'active'
       },
     })
 

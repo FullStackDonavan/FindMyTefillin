@@ -15,6 +15,13 @@ datasource db {
   directUrl = env("fmt_URL_NON_POOLING")
 }
 
+enum TefillinStatus {
+  unclaimed
+  lost
+  found
+  foundButLost
+}
+
 model User {
   id                   Int                  @id @default(autoincrement())
   loginType            String?              @default("email")
@@ -60,10 +67,9 @@ model FoundPost {
   idTag                      String
   location                   String
   photoUrl                   String?
-  matchedRegisteredTefillinId Int?    // optional relation to RegisteredTefillin
-
+  matchedRegisteredTefillinId Int?   
   matchedRegisteredTefillin  RegisteredTefillin? @relation(fields: [matchedRegisteredTefillinId], references: [id])
-  status         String    @default("unclaimed")
+  status                     TefillinStatus @default(unclaimed)
   createdAt                  DateTime @default(now())
 }
 
