@@ -304,6 +304,20 @@
               <div class="border-b border-gray-300 dark:border-gray-600 mb-4">
                 <ul class="flex space-x-4 bg-white dark:bg-gray-800 p-4 shadow-md">
                   <li
+                    :class="tab === 'register' ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-500 hover:text-blue-500'"
+                    class="cursor-pointer pb-2"
+                    @click="setTab('register')"
+                  >
+                    Register
+                  </li>
+                  <li
+                    :class="tab === 'my' ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-500 hover:text-blue-500'"
+                    class="cursor-pointer pb-2"
+                    @click="setTab('my')"
+                  >
+                    My Tefillin
+                  </li>
+                  <li
                     :class="tab === 'lost' ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-500 hover:text-blue-500'"
                     class="cursor-pointer pb-2"
                     @click="setTab('lost')"
@@ -322,6 +336,18 @@
 
               <!-- Tab Content -->
               <div>
+
+                
+                <!-- Register Your Tefillin Tab -->
+                <div v-if="tab === 'register'" class="">
+                  <RegisterYourTefillin />
+                </div>
+
+                <!-- My Tefillin Tab -->
+                <div v-if="tab === 'my'" class="">
+                  <MyTefillin />
+                </div>
+
                 <!-- Lost Tab -->
                 <div v-if="tab === 'lost'" class="">
                   <LostTefillinForm />
@@ -351,7 +377,7 @@ import Cookies from 'js-cookie'
 const loggedInUser = ref(null)
 const defaultCoverImage = 'https://placehold.co/2000x500'
 const editing = ref(false)
-const tab = ref('found')
+const tab = ref('my')
 const highlights = ref([])
 const loadingHighlights = ref(false)
 const errorHighlights = ref(null)

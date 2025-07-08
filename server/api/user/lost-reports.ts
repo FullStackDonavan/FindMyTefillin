@@ -16,9 +16,13 @@ export default defineEventHandler(async (event) => {
   }
 
   const reports = await prisma.lostTefillinReport.findMany({
-    include: { user: true },
+    include: {
+      user: true,
+      registeredTefillin: true, // ✅ include the status from registered tefillin
+    },
     orderBy: { createdAt: 'desc' },
   })
+
 
   return {
     success: true,
@@ -38,6 +42,7 @@ export default defineEventHandler(async (event) => {
         email: report.email,
         location: report.location,
         photoUrl: report.photoUrl || null, // ✅ Use from DB
+        registeredTefillinStatus: report.registeredTefillin?.status ?? null,
       },
     })),
   }

@@ -32,16 +32,29 @@ export default defineEventHandler(async (event) => {
 
     let photoUrl = null
     if (body.photoId) {
-      // Lookup photo record by photoId in DB
       const photoRecord = await prisma.photo.findUnique({
         where: { id: body.photoId }
       })
-
       if (photoRecord) {
-        photoUrl = photoRecord.url // or whatever field stores the photo URL
+        photoUrl = photoRecord.url
       }
     }
 
+    // STEP 1: Create RegisteredTefillin if not registered
+    let registeredTefillin = null
+    if (!registered) {
+      registeredTefillin = await prisma.registeredTefillin.create({
+        data: {
+          userId: user.id,
+          idTag: body.idTag,
+          qrAttached,
+          status: 'lost',
+          photoUrl,
+        },
+      })
+    }
+
+    // STEP 2: Create LostTefillinReport and link to RegisteredTefillin (if applicable)
     const lostReport = await prisma.lostTefillinReport.create({
       data: {
         userId: user.id,
@@ -55,6 +68,7 @@ export default defineEventHandler(async (event) => {
         email: body.email,
         location: body.location,
         photoUrl,
+        registeredTefillinId: registeredTefillin?.id || null,
       },
     })
 

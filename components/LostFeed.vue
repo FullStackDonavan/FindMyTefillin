@@ -71,13 +71,30 @@
           <span class="text-gray-800 dark:text-gray-100">{{ post.content.location }}</span>
         </div>
       </div>
-
-
+      
+      <!-- Status + Timestamp on the same row -->
+      <div class="flex justify-between items-center mt-4 text-xs text-gray-500 dark:text-gray-400">
+        <!-- Registration Status Badge -->
+        <div v-if="post.content.registeredTefillinStatus">
+          <span
+            class="inline-block px-2 py-1 font-medium rounded-full"
+            :class="{
+              'bg-yellow-100 text-yellow-800': post.content.registeredTefillinStatus === 'lost',
+              'bg-green-100 text-green-800': post.content.registeredTefillinStatus === 'active',
+              'bg-gray-200 text-gray-800': post.content.registeredTefillinStatus === 'retired',
+            }"
+          >
+            🪪 {{ post.content.registeredTefillinStatus }}
+          </span>
+        </div>
 
         <!-- Timestamp -->
-        <p class="text-xs text-gray-500 dark:text-gray-400 mt-4 text-right">
+        <p>
           🕒 Posted on {{ new Date(post.createdAt).toLocaleString() }}
         </p>
+      </div>
+
+        
       </div>
     </div>
   </div>

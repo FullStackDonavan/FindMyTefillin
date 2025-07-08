@@ -4,16 +4,16 @@ generator client {
   binaryTargets   = ["native", "debian-openssl-1.1.x"]
 }
 
-//datasource db {
-//  provider = "mysql"
-//  url      = env("DATABASE_URL")
-//}
-
 datasource db {
-  provider  = "postgresql"
-  url       = env("fmt_PRISMA_URL")
-  directUrl = env("fmt_URL_NON_POOLING")
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
+
+//datasource db {
+//  provider  = "postgresql"
+//  url       = env("fmt_PRISMA_URL")
+//  directUrl = env("fmt_URL_NON_POOLING")
+//}
 
 model User {
   id                   Int                  @id @default(autoincrement())
@@ -34,8 +34,26 @@ model User {
 
   photos               Photo[] // Define the relationship with the Photo model
   lostTefillinReports  LostTefillinReport[]
+  registeredTefillin   RegisteredTefillin[]
 
 }
+
+model RegisteredTefillin {
+  id          Int      @id @default(autoincrement())
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int
+
+  idTag       String   @unique
+  qrAttached  Boolean
+  description String?
+  photoUrl    String?
+  status      String   @default("active")
+  createdAt   DateTime @default(now())
+
+  lostReports LostTefillinReport[] @relation("TefillinReports") // 👈 Add this line
+}
+
+
 
 model Session {
   id        Int       @id @default(autoincrement())
@@ -59,9 +77,12 @@ model Post {
 }
 
 model LostTefillinReport {
-  id             Int      @id @default(autoincrement())
-  userId         Int
-  user           User     @relation(fields: [userId], references: [id])
+  id                   Int                 @id @default(autoincrement())
+  userId               Int
+  user                 User                @relation(fields: [userId], references: [id])
+  registeredTefillinId Int?
+  registeredTefillin   RegisteredTefillin? @relation("TefillinReports", fields: [registeredTefillinId], references: [id]) // 👈 Add relation name
+
   idTag          String
   registered     Boolean
   qrAttached     Boolean
@@ -74,6 +95,8 @@ model LostTefillinReport {
   photoUrl       String?
   createdAt      DateTime @default(now())
 }
+
+
 
 
 

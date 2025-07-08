@@ -11,59 +11,61 @@
       </div>
     </div>
 
-    <!-- If registered, login form -->
-    <div v-if="registered === true" class="mb-6">
-      <label class="block text-gray-700 dark:text-gray-300 mb-1">Login Email:</label>
-      <input v-model="loginEmail" type="email" class="form-input mb-2" />
-      <label class="block text-gray-700 dark:text-gray-300 mb-1">Password:</label>
-      <input v-model="loginPassword" type="password" class="form-input" />
+    <!-- If they say "Yes" -->
+    <div v-if="registered === true" class="mb-6 text-center text-yellow-600 dark:text-yellow-400 font-semibold">
+      🔧 This feature is coming soon!
     </div>
 
-    <!-- QR code attached? -->
-    <div class="mb-4">
-      <p class="font-semibold text-gray-700 dark:text-gray-300">Is your QR code attached to your tefillin bag?</p>
-      <div class="flex space-x-4 mt-2">
-        <button @click="qrAttached = true" :class="yesButtonClass(qrAttached)">Yes</button>
-        <button @click="qrAttached = false" :class="yesButtonClass(qrAttached === false)">No</button>
+    <!-- If they say "No", show full form -->
+    <div v-if="registered === false">
+      <!-- QR code attached? -->
+      <div class="mb-4">
+        <p class="font-semibold text-gray-700 dark:text-gray-300">Is your QR code attached to your tefillin bag?</p>
+        <div class="flex space-x-4 mt-2">
+          <button @click="qrAttached = true" :class="yesButtonClass(qrAttached)">Yes</button>
+          <button @click="qrAttached = false" :class="yesButtonClass(qrAttached === false)">No</button>
+        </div>
       </div>
+
+      <!-- ID Tag input -->
+      <div class="mb-6">
+        <label class="block text-gray-700 dark:text-gray-300 mb-1">Enter ID Tag number on your bag:</label>
+        <input v-model="idTag" type="text" maxlength="7" class="form-input" placeholder="e.g. 1234567" />
+      </div>
+
+      <!-- User info -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <input v-model="firstName" class="form-input" placeholder="First Name" />
+        <input v-model="lastName" class="form-input" placeholder="Last Name" />
+        <input v-model="phone" class="form-input" placeholder="Phone Number" />
+        <input v-model="alternatePhone" class="form-input" placeholder="Alternate Contact Number" />
+        <input v-model="email" class="form-input md:col-span-2" placeholder="Your Email" />
+      </div>
+
+      <!-- Photo Upload -->
+      <div class="mt-4">
+        <label class="block text-gray-700 dark:text-gray-300 mb-1">Attach a photo of your tefillin bag:</label>
+        <input type="file" accept="image/*" @change="handleFileChange" />
+      </div>
+
+      <!-- Lost location -->
+      <div class="mt-4">
+        <label class="block text-gray-700 dark:text-gray-300 mb-1">Where did you lose them?</label>
+        <textarea v-model="location" rows="3" class="form-input w-full"></textarea>
+      </div>
+
+      <!-- Submit -->
+      <button
+        @click="handleSubmit"
+        :disabled="loading"
+        class="w-full mt-6 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-lg"
+      >
+        📩 Submit
+      </button>
     </div>
 
-    <!-- ID Tag input -->
-    <div class="mb-6">
-      <label class="block text-gray-700 dark:text-gray-300 mb-1">Enter ID Tag number on your bag:</label>
-      <input v-model="idTag" type="text" maxlength="7" class="form-input" placeholder="e.g. 1234567" />
-    </div>
 
-    <!-- User info -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <input v-model="firstName" class="form-input" placeholder="First Name" />
-      <input v-model="lastName" class="form-input" placeholder="Last Name" />
-      <input v-model="phone" class="form-input" placeholder="Phone Number" />
-      <input v-model="alternatePhone" class="form-input" placeholder="Alternate Contact Number" />
-      <input v-model="email" class="form-input md:col-span-2" placeholder="Your Email" />
-    </div>
-
-    <!-- Photo Upload -->
-    <div class="mt-4">
-      <label class="block text-gray-700 dark:text-gray-300 mb-1">Attach a photo of your tefillin bag:</label>
-      <input type="file" accept="image/*" @change="handleFileChange" />
-    </div>
-
-    <!-- Lost location -->
-    <div class="mt-4">
-      <label class="block text-gray-700 dark:text-gray-300 mb-1">Where did you lose them?</label>
-      <textarea v-model="location" rows="3" class="form-input w-full"></textarea>
-    </div>
-
-    <!-- Submit -->
-    <button
-      @click="handleSubmit"
-      :disabled="loading"
-      class="w-full mt-6 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-lg"
-    >
-      📩 Submit
-    </button>
-  </div>
+       </div> 
 </template>
 
 <script setup>
