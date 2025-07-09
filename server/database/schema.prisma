@@ -35,7 +35,7 @@ model User {
   avatar               String? // Field for storing avatar URL
   session              Session[]
   stripeCustomerId     String?
-  Subscription         Subscription[]
+  order                Order[]
   posts                Post[]
 
   photos               Photo[] // Define the relationship with the Photo model
@@ -131,17 +131,44 @@ model Photo {
 }
 
 
-model Subscription {
-  id            Int       @id @default(autoincrement())
-  user          User      @relation(fields: [userId], references: [id])
-  userId        Int
-  stripeId      String    @unique
-  stripeStatus  String?
-  stripePriceId String?
-  quantity      Int?
-  trialEndsAt   DateTime?
-  endsAt        DateTime?
-  startDate     DateTime
-  lastEventDate DateTime
+model Order {
+  id          Int       @id @default(autoincrement())
+  user        User      @relation(fields: [userId], references: [id])
+  userId      Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  status      String    @default("pending") // pending, paid, shipped, cancelled, etc.
+  totalAmount Float
+  
+  // Shipping info stored as fields for easy querying
+  shippingName    String
+  shippingAddress String
+  shippingCity    String
+  shippingState   String
+  shippingZip     String
+  shippingPhone   String
+  shippingEmail   String
+  
+  // Optional: Stripe payment session or intent ID for tracking payment
+  stripeSessionId String? @unique
+  stripePaymentIntentId String? @unique
+  
+  items OrderItem[]
 }
+
+model OrderItem {
+  id          Int     @id @default(autoincrement())
+  order       Order   @relation(fields: [orderId], references: [id])
+  orderId     Int
+  
+  description String
+  quantity    Int
+  unitPrice   Float   // price per unit, store at order time for consistency
+  
+  // Optional: link to product id if you have a products table
+  // productId Int?
+  // product Product? @relation(fields: [productId], references: [id])
+}
+
 

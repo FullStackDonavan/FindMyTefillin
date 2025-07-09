@@ -215,6 +215,27 @@
                     My Tefillin
                   </li>
                   <li
+                    :class="tab === 'order' ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-500 hover:text-blue-500'"
+                    class="cursor-pointer pb-2"
+                    @click="setTab('order')"
+                  >
+                    Order
+                  </li>
+                  <li
+                    :class="tab === 'myOrders' ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-500 hover:text-blue-500'"
+                    class="cursor-pointer pb-2"
+                    @click="setTab('myOrders')"
+                  >
+                    My Orders
+                  </li>
+                  <li
+                    :class="tab === 'allOrders' ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-500 hover:text-blue-500'"
+                    class="cursor-pointer pb-2"
+                    @click="setTab('allOrders')"
+                  >
+                    All Orders
+                  </li>
+                  <li
                     :class="tab === 'lost' ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-500 hover:text-blue-500'"
                     class="cursor-pointer pb-2"
                     @click="setTab('lost')"
@@ -227,6 +248,13 @@
                     @click="setTab('found')"
                   >
                     Found
+                  </li>
+                  <li
+                    :class="tab === 'unclaimed' ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-500 hover:text-blue-500'"
+                    class="cursor-pointer pb-2"
+                    @click="setTab('unclaimed')"
+                  >
+                    Unclaimed Admin
                   </li>
                 </ul>
               </div>
@@ -245,14 +273,37 @@
                   <MyTefillin />
                 </div>
 
+                <!-- My Order Tab -->
+                <div v-if="tab === 'order'" class="">
+                  <CustomOrderForm />
+                </div>
+
+                <!-- My Orders Tab -->
+                <div v-if="tab === 'myOrders'" class="">
+                  <MyOrders />
+                </div>
+
+                <!-- All Orders Tab -->
+                <div v-if="tab === 'allOrders'" class="">
+                  <AllOrders />
+                </div>
+
+                
                 <!-- Lost Tab -->
                 <div v-if="tab === 'lost'" class="">
                   <LostTefillinForm />
                   <LostFeed />
                 </div>
+
                 <!-- Found Tab -->
                 <div v-if="tab === 'found'" class="">
                   <FoundTefillinForm />
+                  <Feed />
+                </div>
+
+                <!-- UnclaimedTefilinAdmin Tab -->
+                <div v-if="tab === 'unclaimed'" class="">
+                  <UnclaimedTefilinAdmin />
                   <Feed />
                 </div>
 

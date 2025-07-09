@@ -69,14 +69,9 @@ export default defineNuxtConfig({
   },
   
   vite: {
-    // server: {
-    //   hmr: {
-    //   protocol: "http",
-    //   host: 'localhost',
-    //   clientPort: 3000,
-    //   port: 3000,
-    //   },
-    //   },
+   server: {
+      allowedHosts: ['cf03bc0c58d5.ngrok-free.app'] // ← add this!
+    },
     base: './',
     build: {
       minify: 'terser', // Minification
