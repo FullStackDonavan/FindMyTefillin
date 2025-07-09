@@ -1,6 +1,6 @@
 <template>
   <div class="mx-auto bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md">
-    <h2 class="text-2xl font-bold mb-4 text-center text-gray-800 dark:text-white">🧳 I Lost My Tefillin</h2>
+    <h2 class="text-2xl font-bold mb-4 text-center text-gray-800 dark:text-white">I Lost My Tefillin</h2>
 
     <!-- Are they registered? -->
     <div class="mb-4">

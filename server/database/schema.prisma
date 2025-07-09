@@ -4,16 +4,16 @@ generator client {
   binaryTargets   = ["native", "debian-openssl-1.1.x"]
 }
 
-//datasource db {
-//  provider = "mysql"
-//  url      = env("DATABASE_URL")
-//}
-
 datasource db {
-  provider  = "postgresql"
-  url       = env("fmt_PRISMA_URL")
-  directUrl = env("fmt_URL_NON_POOLING")
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
+
+//datasource db {
+//  provider  = "postgresql"
+//  url       = env("fmt_PRISMA_URL")
+//  directUrl = env("fmt_URL_NON_POOLING")
+//}
 
 enum TefillinStatus {
   unclaimed

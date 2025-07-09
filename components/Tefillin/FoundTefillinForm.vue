@@ -1,7 +1,7 @@
 <template>
   <div class="mx-auto bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mt-10">
     <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4 text-center">
-      🧳 Found Tefillin Report
+      Found Tefillin Report
     </h2>
 
     <form @submit.prevent="handleIdCheck" class="space-y-6">

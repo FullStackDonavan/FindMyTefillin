@@ -1,10 +1,10 @@
 <template>
   <div class="mx-auto p-6 bg-white dark:bg-gray-900 rounded-lg shadow-md">
-    <h2 class="text-2xl font-bold mb-4 text-gray-800 dark:text-white">📘 My Registered Tefillin</h2>
+    <h2 class="text-2xl font-bold mb-4 text-gray-800 dark:text-white">My Registered Tefillin</h2>
 
     <div v-if="loading" class="text-gray-600 dark:text-gray-300">Loading your tefillin...</div>
     <div v-else-if="error" class="text-red-500">{{ error }}</div>
-    <div v-else-if="tefillins.length === 0" class="text-gray-500 dark:text-gray-400">You haven’t registered any tefillin yet.</div>
+    <div v-else-if="tefillins.length === 0" class="text-gray-500 dark:text-gray-400">You haven't registered any tefillin yet.</div>
 
     <div v-else>
       <div
