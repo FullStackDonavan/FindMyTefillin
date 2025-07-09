@@ -29,7 +29,7 @@ const sessionId = ref(route.query.session_id ? route.query.session_id : "");
           Manage your subscription
         </button>
       </form> -->
-      <NuxtLink to="/profile"></NuxtLink>
+      <NuxtLink to="/profile">Profile</NuxtLink>
     </div>
     <div v-else>loading. . .</div>
   </div>
