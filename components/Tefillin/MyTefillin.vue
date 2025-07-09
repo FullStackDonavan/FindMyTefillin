@@ -16,16 +16,58 @@
           <img :src="item.photoUrl" alt="Tefillin Photo" class="w-full max-h-64 object-cover rounded-lg border border-gray-300 dark:border-gray-600" />
         </div>
 
-        <div class="text-gray-800 dark:text-gray-100 space-y-1">
-          <p><span class="font-semibold">🆔 ID Tag:</span> {{ item.idTag }}</p>
-          <p><span class="font-semibold">🔖 QR Attached:</span> {{ item.qrAttached ? 'Yes' : 'No' }}</p>
-          <p v-if="item.description"><span class="font-semibold">📝 Description:</span> {{ item.description }}</p>
-          <p class="text-xs text-gray-500 dark:text-gray-400">🕒 Registered on {{ formatDate(item.createdAt) }}</p>
+        <div class="flex justify-between items-center text-gray-700 dark:text-gray-200 mt-4 w-full overflow-x-auto gap-x-6">
+          <div class="flex items-center space-x-1">
+            <span class="font-semibold">Tefillin ID:</span>
+            <span>{{ item.idTag }}</span>
+          </div>
+
+          <div class="flex items-center space-x-1">
+            <span class="font-semibold">QR Attached:</span>
+            <span>{{ item.qrAttached ? 'Yes' : 'No' }}</span>
+          </div>
+
         </div>
+        <div class="flex justify-between items-center mt-4 text-xs text-gray-500 dark:text-gray-400 border-t border-gray-200 dark:border-gray-700 pt-4">
+          
+
+          <div class="min-w-fit">
+            <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full"
+                  :class="getStatusClass(item.status)">
+              {{ item.status || 'unknown' }}
+            </span>
+          </div>
+
+          
+
+          <div class="min-w-fit flex items-center space-x-1">
+            <span class="font-semibold">Registered:</span>
+            <span>{{ formatDate(item.createdAt) }}</span>
+          </div>
+
+          
+
+          
+        </div>
+
+
+<div v-if="item.status === 'foundButLost' || item.status === 'found'" class="flex justify-between items-center mt-4 text-xs text-gray-500 dark:text-gray-400 pt-4">
+        <div  class="min-w-fit">
+            <button
+              class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded whitespace-nowrap"
+              @click="payAndConfirm(item.id)"
+              :disabled="loadingStatus"
+            >
+              Claim & Pay to Activate
+            </button>
+          </div>
+</div>
+
       </div>
     </div>
   </div>
 </template>
+
 
 <script setup>
 import { ref, onMounted } from 'vue'
@@ -39,6 +81,22 @@ const formatDate = (dateStr) => {
   const date = new Date(dateStr)
   return date.toLocaleString()
 }
+
+const getStatusClass = (status) => {
+  switch (status) {
+    case 'registered':
+      return 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100'
+    case 'lost':
+      return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100'
+    case 'returned':
+      return 'bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100'
+    case 'reported':
+      return 'bg-orange-100 text-orange-800 dark:bg-orange-800 dark:text-orange-100'
+    default:
+      return 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-100'
+  }
+}
+
 
 onMounted(async () => {
   loading.value = true

@@ -18,7 +18,7 @@
         </div>
 
         <!-- User Info -->
-        <div class="flex items-center mb-4">
+        <!-- <div class="flex items-center mb-4">
           <img
             v-if="post.user.avatar"
             :src="post.user.avatar"
@@ -28,52 +28,35 @@
           <div class="text-gray-800 dark:text-gray-100 font-semibold">
             {{ post.user.firstName }} {{ post.user.lastName }}
           </div>
-        </div>
+        </div> -->
 
         
 
-       <!-- Package Details -->
-      <div class="space-y-2 text-gray-700 dark:text-gray-200">
-        <div class="flex items-center space-x-2">
-          <span class="font-semibold">📦 Package ID Tag:</span>
-          <span class="text-gray-900 dark:text-white tracking-wide">{{ post.content.idTag || post.content.idCode }}</span>
+       <!-- Package Details (Horizontal Layout) -->
+        <div class="flex justify-between items-center text-gray-700 dark:text-gray-200 mt-4 w-full overflow-x-auto gap-x-6">
+          <div class="flex items-center space-x-1">
+            <span class="font-semibold">Tefillin ID:</span>
+            <span class="text-gray-900 dark:text-white tracking-wide">{{ post.content.idTag || post.content.idCode }}</span>
+          </div>
+
+          <div class="flex items-center space-x-1">
+            <span class="font-semibold">Registered:</span>
+            <span>{{ post.content.registered ? "Yes" : "No" }}</span>
+          </div>
+
+          <div class="flex items-center space-x-1">
+            <span class="font-semibold">QR Attached:</span>
+            <span>{{ post.content.qrAttached ? "Yes" : "No" }}</span>
+          </div>
+
+          
         </div>
-        <div class="flex items-center space-x-2">
-          <span class="font-semibold">✅ Registered:</span>
-          <span>{{ post.content.registered ? "Yes" : "No" }}</span>
-        </div>
-        <div class="flex items-center space-x-2">
-          <span class="font-semibold">🔖 QR Attached:</span>
-          <span>{{ post.content.qrAttached ? "Yes" : "No" }}</span>
-        </div>
-        <div class="flex items-center space-x-2">
-          <span class="font-semibold">👤 First Name:</span>
-          <span>{{ post.content.firstName }}</span>
-        </div>
-        <div class="flex items-center space-x-2">
-          <span class="font-semibold">👥 Last Name:</span>
-          <span>{{ post.content.lastName }}</span>
-        </div>
-        <div class="flex items-center space-x-2">
-          <span class="font-semibold">📞 Phone:</span>
-          <span>{{ post.content.phone }}</span>
-        </div>
-        <div class="flex items-center space-x-2" v-if="post.content.alternatePhone">
-          <span class="font-semibold">📞 Alternate Phone:</span>
-          <span>{{ post.content.alternatePhone }}</span>
-        </div>
-        <div class="flex items-center space-x-2">
-          <span class="font-semibold">📧 Email:</span>
-          <span>{{ post.content.email }}</span>
-        </div>
-        <div class="flex items-start space-x-2">
-          <span class="font-semibold mt-1">📍 Location:</span>
-          <span class="text-gray-800 dark:text-gray-100">{{ post.content.location }}</span>
-        </div>
-      </div>
+
+
+
       
       <!-- Status + Timestamp on the same row -->
-      <div class="flex justify-between items-center mt-4 text-xs text-gray-500 dark:text-gray-400">
+      <div class="flex justify-between items-center mt-4 text-xs text-gray-500 dark:text-gray-400 border-t border-gray-200 dark:border-gray-700 pt-4">
         <!-- Registration Status Badge -->
         <div v-if="post.content.registeredTefillinStatus">
           <span
@@ -84,7 +67,7 @@
               'bg-gray-200 text-gray-800': post.content.registeredTefillinStatus === 'retired',
             }"
           >
-            🪪 {{ post.content.registeredTefillinStatus }}
+            {{ post.content.registeredTefillinStatus }}
           </span>
         </div>
 

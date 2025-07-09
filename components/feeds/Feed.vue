@@ -33,18 +33,19 @@
           />
         </div>
 
-        <!-- Package Details -->
-        <div class="space-y-2 text-gray-700 dark:text-gray-200">
-          <div class="flex items-center space-x-2">
-            <span class="font-semibold">📦 Package ID:</span>
-            <span class="text-gray-900 dark:text-white tracking-wide">{{ post.idTag }}</span>
+        <div class="flex justify-between items-center text-gray-700 dark:text-gray-200 mt-4 w-full overflow-x-auto gap-x-6">
+          <!-- Package Details -->
+          <div class="flex items-center space-x-1">
+              <span class="font-semibold">Tefillin ID:</span>
+              <span class="text-gray-900 dark:text-white tracking-wide">{{ post.idTag }}</span>
           </div>
-          <div class="flex items-start space-x-2">
-            <span class="font-semibold mt-1">📍 Location:</span>
-            <span class="text-gray-800 dark:text-gray-100">{{ post.location }}</span>
+          <div class="flex items-center space-x-1">
+              <span class="font-semibold mt-1">Location:</span>
+              <span class="text-gray-800 dark:text-gray-100">{{ post.location }}</span>
           </div>
         </div>
 
+        <div class="flex justify-between items-center mt-4 text-xs text-gray-500 dark:text-gray-400 border-t border-gray-200 dark:border-gray-700 pt-4">
         <!-- Package Status Badge -->
         <div class="mt-2">
           <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full"
@@ -58,6 +59,7 @@
         <p class="text-xs text-gray-500 dark:text-gray-400 mt-4 text-right">
           🕒 Posted on {{ new Date(post.createdAt).toLocaleString() }}
         </p>
+      </div>
       </div>
 
     </div>
@@ -197,6 +199,8 @@
             return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100';
           case 'returned':
             return 'bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100';
+          case 'foundButLost': // ✅ Add this
+            return 'bg-orange-100 text-orange-800 dark:bg-orange-800 dark:text-orange-100';
           default:
             return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
         }
