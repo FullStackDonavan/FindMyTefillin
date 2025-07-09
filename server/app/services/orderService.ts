@@ -37,7 +37,7 @@ export async function createOrderFromStripeSession(session: Stripe.Checkout.Sess
           data: lineItems.data.map((item) => ({
             description: item.description || 'No description',
             quantity: item.quantity || 1,
-            unitPrice: ((item.amount_total || 0) / (item.quantity || 1)) / 100,
+            unitPrice: ((item.amount_total || 0) / (item.quantity || 1)),
           })),
         },
       },
