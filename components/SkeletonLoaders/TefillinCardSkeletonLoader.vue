@@ -4,7 +4,7 @@
   >
     <!-- Image Skeleton -->
     <div class="mb-3">
-      <div class="w-full h-64 bg-gray-800 dark:bg-gray-600 rounded-lg border border-gray-300 dark:border-gray-600"></div>
+      <div class="w-full h-64 bg-gray-300 dark:bg-gray-600 rounded-lg border border-gray-300 dark:border-gray-600"></div>
     </div>
 
 
