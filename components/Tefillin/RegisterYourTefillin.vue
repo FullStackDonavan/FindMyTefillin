@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-auto p-6 bg-white dark:bg-gray-900 rounded-lg shadow">
+  <div class="mx-auto p-6 bg-white dark:bg-gray-800 rounded-lg shadow">
     <h2 class="text-xl font-bold mb-4 text-gray-800 dark:text-white">Register My Tefillin</h2>
 
     <input v-model="idTag" placeholder="ID Tag (e.g. 1234567)" class="form-input mb-3" />

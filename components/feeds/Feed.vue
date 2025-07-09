@@ -1,8 +1,11 @@
 <template>
-  <div class="feed-container mx-auto">
+  <div class="feed-container mx-auto bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mt-4">
     <h2 class="text-xl font-semibold my-4 text-gray-800 dark:text-gray-100">Found Packages</h2>
 
-    <div v-if="loading" class="text-center text-gray-600 dark:text-gray-300">Loading packages...</div>
+    <div v-if="loading" class="space-y-4">
+      <TefillinCardSkeletonLoader v-for="i in 3" :key="i" />
+    </div>
+
     <div v-else-if="error" class="text-red-500 dark:text-red-400">{{ error }}</div>
     
     <div v-else>
