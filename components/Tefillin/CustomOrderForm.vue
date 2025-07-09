@@ -3,49 +3,79 @@
     <h2 class="text-2xl font-bold mb-4 text-gray-800 dark:text-white">ORDER CUSTOM findmytefilin.com tags</h2>
     <p class="mb-4 text-gray-600 dark:text-gray-300">All orders are shipped free of charge to any address in USA</p>
 
+    <div class="flex justify-center space-x-4 mb-6">
+      <button
+        :class="[
+          'px-4 py-2 rounded font-semibold',
+          selectedCategory === 'single'
+            ? 'bg-blue-600 text-white'
+            : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white'
+        ]"
+        @click="selectedCategory = 'single'"
+      >
+        Single
+      </button>
+      <button
+        :class="[
+          'px-4 py-2 rounded font-semibold',
+          selectedCategory === 'family'
+            ? 'bg-blue-600 text-white'
+            : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white'
+        ]"
+        @click="selectedCategory = 'family'"
+      >
+        Family
+      </button>
+    </div>
+
+
     <form @submit.prevent="handleSubmit" class="space-y-6">
 
       <!-- Single Tags -->
-      <div>
-        <h3 class="font-semibold mb-4 text-gray-800 dark:text-gray-200">Single Tags</h3>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          <div
-            v-for="(item, index) in singleItems"
-            :key="'single-' + index"
-            class="bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg p-4 flex flex-col justify-between"
-          >
-            <p class="mb-4 text-gray-700 dark:text-gray-300">{{ item.description }}</p>
-            <div class="flex items-center justify-between">
-              <input
-                type="number"
-                min="0"
-                v-model.number="item.qty"
-                class="w-20 p-1 border rounded text-center dark:bg-gray-700 dark:text-white"
-              />
-              <span class="font-semibold text-gray-900 dark:text-white">${{ item.price.toFixed(2) }}</span>
+      <div v-if="selectedCategory === 'single'">
+        <div>
+          <h3 class="font-semibold mb-4 text-gray-800 dark:text-gray-200">Single Tags</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <div
+              v-for="(item, index) in singleItems"
+              :key="'single-' + index"
+              class="bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg p-4 flex flex-col justify-between"
+            >
+              <p class="mb-4 text-gray-700 dark:text-gray-300">{{ item.description }}</p>
+              <div class="flex items-center justify-between">
+                <input
+                  type="number"
+                  min="0"
+                  v-model.number="item.qty"
+                  class="w-20 p-1 border rounded text-center dark:bg-gray-700 dark:text-white"
+                />
+                <span class="font-semibold text-gray-900 dark:text-white">${{ item.price.toFixed(2) }}</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Family Packages -->
-      <div>
-        <h3 class="font-semibold mb-4 text-gray-800 dark:text-gray-200">Family Packages</h3>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          <div
-            v-for="(item, index) in familyItems"
-            :key="'family-' + index"
-            class="bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg p-4 flex flex-col justify-between"
-          >
-            <p class="mb-4 text-gray-700 dark:text-gray-300">{{ item.description }}</p>
-            <div class="flex items-center justify-between">
-              <input
-                type="number"
-                min="0"
-                v-model.number="item.qty"
-                class="w-20 p-1 border rounded text-center dark:bg-gray-700 dark:text-white"
-              />
-              <span class="font-semibold text-gray-900 dark:text-white">${{ item.price.toFixed(2) }}</span>
+       <div v-if="selectedCategory === 'family'">
+        <div>
+          <h3 class="font-semibold mb-4 text-gray-800 dark:text-gray-200">Family Packages</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <div
+              v-for="(item, index) in familyItems"
+              :key="'family-' + index"
+              class="bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg p-4 flex flex-col justify-between"
+            >
+              <p class="mb-4 text-gray-700 dark:text-gray-300">{{ item.description }}</p>
+              <div class="flex items-center justify-between">
+                <input
+                  type="number"
+                  min="0"
+                  v-model.number="item.qty"
+                  class="w-20 p-1 border rounded text-center dark:bg-gray-700 dark:text-white"
+                />
+                <span class="font-semibold text-gray-900 dark:text-white">${{ item.price.toFixed(2) }}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -182,6 +212,9 @@ const shipping = reactive({
 const submitting = ref(false)
 const errorMessage = ref('')
 
+const selectedCategory = ref('single')
+
+
 const total = computed(() => {
   const singleTotal = singleItems.reduce((sum, item) => sum + item.price * item.qty, 0)
   const familyTotal = familyItems.reduce((sum, item) => sum + item.price * item.qty, 0)
@@ -207,7 +240,9 @@ async function handleSubmit() {
       total: total.value,
     }
 
-    const authCookie = useAuthCookie().value  // <-- Use .value here
+    const authCookie = useAuthCookie().value 
+    console.log('Order data being sent to server:', orderData)
+
 
     const response = await fetch('/api/create-checkout-session', {
       method: 'POST',

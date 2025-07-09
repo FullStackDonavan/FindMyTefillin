@@ -1,53 +1,45 @@
-import prisma from '~/server/database/client'  // Adjust your Prisma client import
 import Stripe from 'stripe'
+import prisma from '~/server/database/client'
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: '2022-11-15',
+})
 
 export async function createOrderFromStripeSession(session: Stripe.Checkout.Session) {
-  const metadata = session.metadata
-  if (!metadata) throw new Error('Missing metadata in Stripe session')
+  // Fetch line items separately
+  const lineItems = await stripe.checkout.sessions.listLineItems(session.id, {
+    limit: 100,
+  })
 
-  // Parse userId from metadata (make sure you set this when creating checkout session)
-  const userId = Number(metadata.userId)
-  if (!userId) throw new Error('User ID missing in Stripe session metadata')
+  const userId = parseInt(session.metadata?.userId || '0')
+  if (!userId) throw new Error('Missing userId in metadata')
 
-  // Parse total amount from metadata
-  const totalAmount = Math.round(parseFloat(metadata.orderTotal) * 100)
-  if (isNaN(totalAmount)) throw new Error('Invalid total amount in metadata')
+  const shipping = session.customer_details || session.shipping_details
 
-  // You can extend this to include actual order items if you want
-  const rawItems = metadata.orderItems
-  if (!rawItems) throw new Error('Missing order items in metadata')
-
-  let orderItems = []
-  try {
-    orderItems = JSON.parse(rawItems).map((item: any) => ({
-      description: item.description,
-      quantity: item.qty,
-      unitPrice: Math.round(item.price * 100),
-    }))
-  } catch (e) {
-    throw new Error('Failed to parse order items JSON')
-  }
-
-
-  // Create the order
   const order = await prisma.order.create({
     data: {
-      user: {
-        connect: { id: userId },
-      },
-      totalAmount,
-      shippingName: metadata.shippingName,
-      shippingAddress: metadata.shippingAddress,
-      shippingCity: metadata.shippingCity,
-      shippingState: metadata.shippingState,
-      shippingZip: metadata.shippingZip,
-      shippingPhone: metadata.shippingPhone,
-      shippingEmail: metadata.shippingEmail,
-      stripeSessionId: session.id,
-      stripePaymentIntentId: session.payment_intent as string | undefined,
+      userId,
+      totalAmount: session.amount_total || 0,
       status: 'paid',
+      stripeSessionId: session.id,
+      stripePaymentIntentId: session.payment_intent as string,
+
+      shippingName: shipping?.name || '',
+      shippingAddress: shipping?.address?.line1 || '',
+      shippingCity: shipping?.address?.city || '',
+      shippingState: shipping?.address?.state || '',
+      shippingZip: shipping?.address?.postal_code || '',
+      shippingPhone: shipping?.phone || '',
+      shippingEmail: shipping?.email || '',
+
       items: {
-        create: orderItems,
+        createMany: {
+          data: lineItems.data.map((item) => ({
+            description: item.description || 'No description',
+            quantity: item.quantity || 1,
+            unitPrice: ((item.amount_total || 0) / (item.quantity || 1)) / 100,
+          })),
+        },
       },
     },
   })

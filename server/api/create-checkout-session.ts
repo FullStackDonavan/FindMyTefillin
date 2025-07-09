@@ -61,16 +61,8 @@ export default defineEventHandler(async (event) => {
       success_url: `${process.env.FRONTEND_URL}/order-success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.FRONTEND_URL}/order-cancelled`,
       metadata: {
-        userId: String(user.id), // ✅ This is now safe
-        shippingName: shipping.name,
-        shippingAddress: shipping.address,
-        shippingCity: shipping.city,
-        shippingState: shipping.state,
-        shippingZip: shipping.zip,
-        shippingPhone: shipping.phone,
-        shippingEmail: shipping.email,
-        orderTotal: total.toString(),
-        orderItems: JSON.stringify(items),
+        userId: String(user.id),
+        orderTotal: total.toFixed(2),
       },
     })
 
