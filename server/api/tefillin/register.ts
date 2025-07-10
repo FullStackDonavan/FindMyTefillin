@@ -2,6 +2,9 @@ import { getHeader, readBody, createError } from 'h3'
 import prisma from '~/server/database/client'
 import { getUserByAuthToken } from '~/server/database/repositories/sessionRepository'
 
+import { sendEmail } from '~/server/utils/sendEmail'
+import { registerReportConfirmation } from '~/server/utils/emailTemplates'
+
 export default defineEventHandler(async (event) => {
   try {
     const authToken = getHeader(event, 'authorization')?.replace('Bearer ', '')
@@ -27,6 +30,16 @@ export default defineEventHandler(async (event) => {
         status: status || 'active', // ✅ use provided status, else default to 'active'
       },
     })
+
+    await sendEmail({
+            to: user.email,
+            subject: 'We’ve received your registeration for your tefillin',
+            html: registerReportConfirmation({
+              name: user.firstName || 'Friend',
+              idTag: body.idTag,
+              description: body.description || '',
+            }),
+          })
 
     return { success: true, tefillin: newTefillin }
   } catch (error) {

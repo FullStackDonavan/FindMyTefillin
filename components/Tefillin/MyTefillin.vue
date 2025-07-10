@@ -104,10 +104,32 @@ const getStatusClass = (status) => {
   }
 }
 
-const payAndConfirm = (id) => {
-  // Your claim & pay logic here
-  console.log('Pay and confirm for', id)
+const payAndConfirm = async (id) => {
+  loadingStatus.value = true
+  try {
+    const token = Cookies.get('auth_token')
+    const res = await fetch('/api/tefillin/claim', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ registeredTefillinId: id }),
+    })
+
+    const data = await res.json()
+    if (!data.success) throw new Error(data.message)
+    alert('✅ Claimed successfully!')
+    // Refresh data
+    location.reload()
+  } catch (err) {
+    console.error('❌ Claim failed:', err)
+    alert(err.message || 'Claim failed')
+  } finally {
+    loadingStatus.value = false
+  }
 }
+
 
 onMounted(async () => {
   pending.value = true

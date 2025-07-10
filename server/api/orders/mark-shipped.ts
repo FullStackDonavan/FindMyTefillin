@@ -1,6 +1,9 @@
-import { getHeader, readBody } from 'h3'
+import { getHeader, readBody, createError } from 'h3'
 import prisma from '~/server/database/client'
 import { getUserByAuthToken } from '~/server/database/repositories/sessionRepository'
+
+import { sendEmail } from '~/server/utils/sendEmail'
+import { orderShippedConfirmation } from '~/server/utils/emailTemplates'
 
 export default defineEventHandler(async (event) => {
   const authToken = getHeader(event, 'authorization')?.replace('Bearer ', '')
@@ -18,6 +21,19 @@ export default defineEventHandler(async (event) => {
     const updatedOrder = await prisma.order.update({
       where: { id: orderId },
       data: { status: 'shipped' },
+    })
+
+    // ✅ Send "Order Shipped" email
+    await sendEmail({
+      to: user.email,
+      subject: 'Your Order Has Shipped!',
+      html: orderShippedConfirmation({
+        name: user.firstName || 'Friend',
+        orderId: updatedOrder.id,
+        trackingNumber: body.trackingNumber || 'Unavailable',
+        carrier: body.carrier || 'Carrier Info Not Provided',
+        estimatedDelivery: body.estimatedDelivery || '',
+      }),
     })
 
     return { message: 'Order marked as shipped', order: updatedOrder }

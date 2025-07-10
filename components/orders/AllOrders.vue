@@ -61,9 +61,9 @@
             <li
               v-for="item in order.items"
               :key="item.id"
-              class="text-sm text-gray-600 dark:text-gray-300 border-t border-gray-200 dark:border-gray-700 pt-2 mt-2"
+              class="text-sm text-gray-600 dark:text-gray-300 border-t border-gray-200 dark:border-gray-700 py-4 mt-2"
             >
-              {{ item.description }} — Qty: {{ item.quantity }} — ${{ (item.unitPrice / 100).toFixed(2) }}
+              {{ item.description }} — <strong>Qty: {{ item.quantity }} — ${{ (item.unitPrice / 100).toFixed(2) }}</strong>
             </li>
           </ul>
         </div>

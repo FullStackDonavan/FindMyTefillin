@@ -2,6 +2,9 @@ import { getHeader, readBody, createError } from 'h3'
 import prisma from '~/server/database/client'
 import { getUserByAuthToken } from '~/server/database/repositories/sessionRepository'
 
+import { sendEmail } from '~/server/utils/sendEmail'
+import { lostReportConfirmation } from '~/server/utils/emailTemplates'
+
 export default defineEventHandler(async (event) => {
   try {
     const authToken = getHeader(event, 'authorization')?.replace('Bearer ', '')
@@ -56,21 +59,34 @@ export default defineEventHandler(async (event) => {
 
     // STEP 2: Create LostTefillinReport and link to RegisteredTefillin (if applicable)
     const lostReport = await prisma.lostTefillinReport.create({
-      data: {
-        userId: user.id,
-        idTag: body.idTag,
-        registered,
-        qrAttached,
-        firstName: body.firstName,
-        lastName: body.lastName,
-        phone: body.phone,
-        alternatePhone: body.alternatePhone || null,
-        email: body.email,
-        location: body.location,
-        photoUrl,
-        registeredTefillinId: registeredTefillin?.id || null,
-      },
-    })
+  data: {
+    userId: user.id,
+    idTag: body.idTag,
+    registered,
+    qrAttached,
+    firstName: body.firstName,
+    lastName: body.lastName,
+    phone: body.phone,
+    alternatePhone: body.alternatePhone || null,
+    email: body.email,
+    location: body.location,
+    photoUrl,
+    registeredTefillinId: registeredTefillin?.id || null,
+  },
+      })
+
+      await sendEmail({
+        to: user.email,
+        subject: 'We’ve received your lost tefillin report',
+        html: lostReportConfirmation({
+          name: user.firstName || 'Friend',
+          idTag: body.idTag,
+          location: body.location,
+          description: body.description || '',
+        }),
+      })
+
+
 
     return { success: true, report: lostReport }
   } catch (error) {
