@@ -21,7 +21,7 @@
 
     <!-- Text -->
     <div class="col-span-full md:col-span-8 lg:col-span-7 pt-6 md:pt-0 md:pl-6 lg:pl-4 text-center md:text-left">
-      <h4 class="font-montserrat font-normal uppercase text-gray-900 text-xl leading-tight mb-3">The Response</h4>
+      <h4 class="font-montserrat font-bold uppercase text-gray-900 text-xl leading-tight mb-3">The Response</h4>
       <p class="text-gray-700 text-lg">
         Whoever finds your tefilin uses the MyTefilinTag™ to contact us. As a registered user you are notified instantly by phone and email.
       </p>

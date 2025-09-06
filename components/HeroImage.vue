@@ -16,7 +16,7 @@
 
       <!-- Main Heading -->
       <h1
-        class="text-3xl sm:text-4xl md:text-5xl lg:text-[60px] font-light uppercase text-white tracking-[-1px] leading-10 sm:leading-12 md:leading-14 lg:leading-[67.2px] my-[15px]"
+        class="text-3xl sm:text-4xl md:text-5xl lg:text-[60px] font-black uppercase text-white tracking-[-1px] leading-10 sm:leading-12 md:leading-14 lg:leading-[67.2px] my-[15px]"
         style="font-family: Montserrat, sans-serif; text-shadow: rgba(17, 46, 78, 0.72) 0px 2px 5px;"
       >
         Reuniting Your Tefilin Quickly and Easily
