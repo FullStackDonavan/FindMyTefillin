@@ -2,6 +2,7 @@
     <section
   class="w-full bg-[#eceeef] bg-cover bg-center bg-no-repeat rounded-sm pt-[120px] pb-[144px] px-4 sm:px-8 text-[#373a3c] text-base leading-6 font-sans relative"
   style="background-image: url('https://plus.unsplash.com/premium_photo-1676218968741-8179dd7e533f?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8bW91bnRhaW5zfGVufDB8fDB8fHww');"
+  
 >
   <div class="mx-auto max-w-[1140px] px-4 lg:px-0">
     <div class="text-center">
