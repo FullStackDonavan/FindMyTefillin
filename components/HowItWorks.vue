@@ -16,7 +16,6 @@
 
       <!-- Step 4 -->
       <YouGetYourTefilinBack />
-
     </div>
   </section>
 </template>
