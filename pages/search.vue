@@ -104,12 +104,10 @@
         </h2>
 
         <!-- Loading -->
-        <div v-if="loading" class="flex flex-col items-center justify-center py-16">
-          <div class="relative">
-            <div class="w-12 h-12 border-4 border-gray-200 border-t-black rounded-full animate-spin"></div>
-          </div>
-          <p class="mt-4 text-gray-600 dark:text-white font-medium">Loading results...</p>
+        <div v-if="loading" class="grid gap-6 md:grid-cols-2">
+        <TefillinSearchCardSkeletonLoader v-for="n in 6" :key="n" />
         </div>
+
 
         <!-- Results -->
         <div v-else>

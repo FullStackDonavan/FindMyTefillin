@@ -20,7 +20,7 @@ const items = [
   },
   {
     title: "Order Tefilin Tags",
-    link: "/for-organizations",
+    link: "/profile",
     img: "/img/t1.jpeg",
     position: "center center",
   },

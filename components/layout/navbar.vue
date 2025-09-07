@@ -17,6 +17,6 @@
       <MobileMenuButton />
       <ClickableLogo />
     </MobileMenuContainer>
-    <IconList />
+    <MenuList />
   </MenuContainer>
 </template>

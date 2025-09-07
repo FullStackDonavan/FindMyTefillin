@@ -15,35 +15,49 @@
         </span>
       </nuxt-link>
 
-      <!-- About Link -->
-      <!-- <nuxt-link to="/about-me" class="relative group">
+      <!-- Search Lost & Found Link -->
+      <nuxt-link to="/search" class="relative group">
         <span
           :class="[
             'text-base font-medium relative transition-colors duration-300 px-3 py-1 rounded-md',
-            isActive('/about-me')
+            isActive('/search')
               ? 'text-gray-900 dark:text-gray-300 bg-gray-200 dark:bg-gray-500'
               : 'text-gray-500 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-gray-300',
           ]"
         >
-          About
-        </span>
-      </nuxt-link> -->
-
-      <!-- Portfolio Link -->
-      <nuxt-link to="/categories/" class="relative group">
-        <span
-          :class="[
-            'text-base font-medium relative transition-colors duration-300 px-3 py-1 rounded-md',
-            isPortfolioActive
-              ? 'text-gray-900 dark:text-gray-300 bg-gray-200 dark:bg-gray-500'
-              : 'text-gray-500 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-gray-300',
-          ]"
-        >
-          Reflections
+          Search Lost & Found
         </span>
       </nuxt-link>
 
-      <nuxt-link to="/profile/" class="relative group">
+      <!-- Report Found Tefilin Link -->
+      <nuxt-link to="/found" class="relative group">
+        <span
+          :class="[
+            'text-base font-medium relative transition-colors duration-300 px-3 py-1 rounded-md',
+            isActive('/found')
+              ? 'text-gray-900 dark:text-gray-300 bg-gray-200 dark:bg-gray-500'
+              : 'text-gray-500 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-gray-300',
+          ]"
+        >
+          Report Found Tefilin
+        </span>
+      </nuxt-link>
+
+      <!-- Report Lost Tefilin Link -->
+      <nuxt-link to="/lost" class="relative group">
+        <span
+          :class="[
+            'text-base font-medium relative transition-colors duration-300 px-3 py-1 rounded-md',
+            isActive('/lost')
+              ? 'text-gray-900 dark:text-gray-300 bg-gray-200 dark:bg-gray-500'
+              : 'text-gray-500 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-gray-300',
+          ]"
+        >
+          Report Lost Tefilin
+        </span>
+      </nuxt-link>
+
+      <!-- <nuxt-link to="/profile/" class="relative group">
         <span
           :class="[
             'text-base font-medium relative transition-colors duration-300 px-3 py-1 rounded-md',
@@ -54,7 +68,7 @@
         >
           Profile
         </span>
-      </nuxt-link>
+      </nuxt-link> -->
     </div>
   </nav>
 </template>
