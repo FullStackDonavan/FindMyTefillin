@@ -87,9 +87,9 @@ const setColorTheme = () => {
   <div class="hidden md:flex justify-between space-x-10 mt-4 items-center text-gray-600 dark:text-gray-200">
 
     <!-- Home -->
-    <NuxtLink to="/" title="Home">
+    <!-- <NuxtLink to="/" title="Home">
       <Icon name="mdi:home" class="w-6 h-6 hover:text-blue-500" />
-    </NuxtLink>
+    </NuxtLink> -->
 
 
     <!-- Light/Dark Toggle -->

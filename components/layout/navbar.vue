@@ -15,8 +15,9 @@
   <MenuContainer>
     <MobileMenuContainer>
       <MobileMenuButton />
-      <ClickableLogo />
+      <ClickableLogo /> <span class="sm:hidden text-[#d8d8d8] text-sm italic" style="font-family: &quot;Open Sans&quot;;">the tefilin registry</span>
     </MobileMenuContainer>
     <MenuList />
+    <IconList />
   </MenuContainer>
 </template>
